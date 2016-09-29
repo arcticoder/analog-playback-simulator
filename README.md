@@ -14,6 +14,6 @@ Console application.
 * This is not a DJ app nor is it intended to be, even though the first use case will be vinyl records. Standard usage only.
 
 # Requirements
-mplayer in system path
-python 3.x in system path
+* mplayer in system path
+* python 3.x in system path
 
