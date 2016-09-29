@@ -14,4 +14,5 @@ Console application.
 
 # Requirements
 mplayer in system path
+python in system path
 
