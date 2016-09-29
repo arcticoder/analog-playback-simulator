@@ -1,5 +1,6 @@
 import sys, getopt
 from subprocess import call
+from subprocess import Popen,PIPE
 
 
 def main(argv):
@@ -17,10 +18,13 @@ def main(argv):
         if (command in ['unloaded_stopped','loaded_stopped','loaded_started']):
             state = command
         elif command == 'exit':
+            proc.kill()
             sys.exit()
         print('Current state: ' + state)
         if state == 'loaded_started':
-            call("mplayer -quiet \"" + infile + "\"", shell=True)
+            proc = Popen("mplayer -quiet \"" + infile + "\"", stdout=PIPE, stderr=PIPE)
+        if (state in ['loaded_stopped','unloaded_stopped'] and proc):
+            proc.kill()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
