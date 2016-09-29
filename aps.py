@@ -1,16 +1,22 @@
 import sys, getopt
-from subprocess import call
-from subprocess import Popen,DEVNULL,PIPE
+from subprocess import call, Popen, DEVNULL, PIPE
 
 
 def main(argv):
+    """
+    Analog Playback Simulator (APS)
+    Simulate navigating machine states as it plays back media.
+    
+    :param argv:
+    :return:
+    """
     stateGraph = {
         'unloaded_stopped': ['loaded_stopped'],
         'loaded_stopped': ['unloaded_stopped', 'loaded_started'],
-        'loaded_started': ['loaded_stopped','loaded_paused'],
-        'loaded_paused': ['loaded_started','loaded_stopped']
+        'loaded_started': ['loaded_stopped', 'loaded_paused'],
+        'loaded_paused': ['loaded_started', 'loaded_stopped']
     }
-    opts, args = getopt.getopt(argv,"hi:",["infile="])
+    opts, args = getopt.getopt(argv, "hi:", ["infile="])
     proc = None
     for opt, arg in opts:
         if opt == '-h':
@@ -32,7 +38,7 @@ def main(argv):
         if state == 'loaded_started':
             cmd = ['mplayer', '-slave', '-quiet', infile]
             proc = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL, stdin=PIPE, universal_newlines=True, bufsize=1)
-        elif (state in ['loaded_stopped','unloaded_stopped'] and proc):
+        elif (state in ['loaded_stopped', 'unloaded_stopped'] and proc):
             proc.kill()
         elif (state == 'loaded_paused' and proc):
             print('pause', flush=True, file=proc.stdin)
