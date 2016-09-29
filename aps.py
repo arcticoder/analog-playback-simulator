@@ -4,7 +4,14 @@ from subprocess import Popen,DEVNULL,PIPE
 
 
 def main(argv):
+    stateGraph = {
+        'unloaded_stopped': ['loaded_stopped'],
+        'loaded_stopped': ['unloaded_stopped', 'loaded_started'],
+        'loaded_started': ['loaded_stopped','loaded_paused'],
+        'loaded_paused': ['loaded_started','loaded_stopped']
+    }
     opts, args = getopt.getopt(argv,"hi:",["infile="])
+    proc = None
     for opt, arg in opts:
         if opt == '-h':
             print('aps.py -i <infile>')
@@ -14,11 +21,12 @@ def main(argv):
     state = 'unloaded_stopped'
     print('Current state: ' + state)
     while True:
-        command = input('Enter new state (unloaded_stopped,loaded_stopped,loaded_started,loaded_paused,exit):')
-        if (command in ['unloaded_stopped','loaded_stopped','loaded_started','loaded_paused']):
+        command = input('Enter new state (' + ','.join(stateGraph[state]) + ') or exit):')
+        if (command in stateGraph[state]):
             state = command
         elif command == 'exit':
-            proc.kill()
+            if proc:
+                proc.kill()
             sys.exit()
         print('Current state: ' + state)
         if state == 'loaded_started':
