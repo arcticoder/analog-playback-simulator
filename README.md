@@ -11,6 +11,7 @@ Console application.
 * No artwork browsing yet. 
 * No video (ex. RCA selectavision, VHS, Betamax, etc) yet, but anything mplayer can play should be doable in the long term.
 * Limiting rule complexity (ex. random noise from fault introduction) and global states (ex. dirty head/needle) for initial milestones
+* This is not a DJ app nor is it intended to be, even though the first use case will be vinyl records. Standard usage only.
 
 # Requirements
 mplayer in system path
