@@ -10,7 +10,13 @@ def main(argv):
             sys.exit()
         elif opt in ("-i", "--infile"):
             infile = arg
-    call("mplayer -quiet \"" + infile + "\"", shell=True)
+    print('Current state: loaded_stopped')
+    while True:
+        command = input('Enter new state (loaded_started,exit):')
+        if command == 'loaded_started':
+            call("mplayer -quiet \"" + infile + "\"", shell=True)
+        elif command == 'exit':
+            sys.exit()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
