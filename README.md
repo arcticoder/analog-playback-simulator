@@ -19,6 +19,6 @@ Media organization and selection is outside the scope of this project, playback 
 
 # Usage
 python aps.py -i <infile> -s <sim_machine_file.json>
-infile is audio media, sim_machine_file is json
+infile is audio media, sim_machine_file is a machine state graph encoded as an adjacency list (see sample_sm.json for example)
 
 Where infile is the media to be loaded. This is not where sound effects or machine animations go. 
