@@ -10,11 +10,27 @@ def main(argv):
     :param argv:
     :return:
     """
-    stateGraph = {
-        'unloaded_stopped': ['loaded_stopped'],
-        'loaded_stopped': ['loaded_started','unloaded_stopped'],
-        'loaded_started': ['loaded_paused', 'loaded_stopped'],
-        'loaded_paused': ['loaded_started', 'loaded_stopped']
+    state_graph = {
+        'unloaded_stopped': {
+            'loaded_stopped': {
+                # transition sound effect, this will end up in a json file soon
+                'audio': 'sound effects\load record short.wav'
+            }
+        },
+        'loaded_stopped': {
+            'loaded_started': {},
+            'unloaded_stopped': {}
+        },
+        'loaded_started': {
+            'loaded_paused': {
+                'audio': 'sound effects\pause record short.wav'
+            },
+            'loaded_stopped': {}
+        },
+        'loaded_paused': {
+            'loaded_started': {},
+            'loaded_stopped': {}
+        }
     }
     opts, args = getopt.getopt(argv, "hi:", ["infile="])
     proc = None
@@ -24,47 +40,47 @@ def main(argv):
             sys.exit()
         elif opt in ("-i", "--infile"):
             infile = arg
-    pyAudio = pyaudio.PyAudio()
+    py_audio = pyaudio.PyAudio()
     wavChunkSize = 1024
 
     state = 'unloaded_stopped'
     print('Current state: ' + state)
     while True:
-        command = input('Enter new state (' + ','.join(stateGraph[state]) + ') or exit):')
-        if (command == ''):
-            command = stateGraph[state][0]
-        if (command in stateGraph[state]):
-            if (state == 'unloaded_stopped' and command == 'loaded_stopped'):
-                #transition sound effect, this will end up in a json file soon
-                loadingSound = wave.open("sound effects\load record short.wav", "rb")
-                audioStream = pyAudio.open(format=pyAudio.get_format_from_width(loadingSound.getsampwidth()),
-                                    channels=loadingSound.getnchannels(),
-                                    rate=loadingSound.getframerate(),
+        command = input('Enter new state (' + ','.join(state_graph[state]) + ') or exit):')
+
+        if (command in state_graph[state]):
+            # check for transition audio, play if found
+            if ('audio' in state_graph[state][command]):
+                audio_path = state_graph[state][command]['audio']
+                loading_sound = wave.open(audio_path, "rb")
+                audio_stream = py_audio.open(format = py_audio.get_format_from_width(loading_sound.getsampwidth()),
+                                    channels = loading_sound.getnchannels(),
+                                    rate = loading_sound.getframerate(),
                                     output=True)
-                audioData = loadingSound.readframes(wavChunkSize)
+                audio_data = loading_sound.readframes(wavChunkSize)
 
-                while len(audioData) != 0:
-                    audioStream.write(audioData)
-                    audioData = loadingSound.readframes(wavChunkSize)
+                while len(audio_data) != 0:
+                    audio_stream.write(audio_data)
+                    audio_data = loading_sound.readframes(wavChunkSize)
 
-                audioStream.stop_stream()
-                audioStream.close()
-                loadingSound.close()
+                audio_stream.stop_stream()
+                audio_stream.close()
+                loading_sound.close()
             state = command
         elif command == 'exit':
             if proc:
                 proc.kill()
-            pyAudio.terminate()
+            py_audio.terminate()
             sys.exit()
         print('Current state: ' + state)
         if state == 'loaded_started':
             cmd = ['mplayer', '-slave', '-quiet', infile]
             print('playing ' + infile)
-            proc = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL, stdin=PIPE, universal_newlines=True, bufsize=1)
+            proc = Popen(cmd, stdout = DEVNULL, stderr = DEVNULL, stdin = PIPE, universal_newlines = True, bufsize = 1)
         elif (state in ['loaded_stopped', 'unloaded_stopped'] and proc):
             proc.kill()
         elif (state == 'loaded_paused' and proc):
-            print('pause', flush=True, file=proc.stdin)
+            print('pause', flush = True, file = proc.stdin)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
