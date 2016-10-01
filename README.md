@@ -16,9 +16,11 @@ Media organization and selection is outside the scope of this project, playback 
 * mplayer in system path
 * python 3.x in system path
     * pyaudio
+* A simulated machine (JSON) and corresponding media for it. A sample file is included with the project but no media files yet (copyright issues).  
 
 # Usage
 python aps.py -i <infile> -s <sim_machine_file.json>
-infile is audio media, sim_machine_file is a machine state graph encoded as an adjacency list (see sample_sm.json for example)
+infile is audio media, sim_machine_file is a machine state graph encoded as an adjacency list (see sample_sm.json for example).
+Sound effects and animation paths go in here.
 
-Where infile is the media to be loaded. This is not where sound effects or machine animations go. 
+Where infile is the media to be loaded.  
