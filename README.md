@@ -2,10 +2,9 @@
 
 Analog Playback Simulator (APS) simulates analog media (audio only for now) players such as record players, cassette players, 8-track players, reel-to-reel. Realistic model-specific behaviour is the goal of this project. CD players would work too, but then again so would a monkey eating a banana. If you want digital, mash your palm against/shout into your phone until media comes out.
 
-Common state elements among analog devices for the purposes of this project are available commands (hotkey and/or image region), audio clip (optional, state or transition), static image display (optional, state-only), animation (optional, state or transition). States and state transitions for each device model will have their own unique variations.
+Common state elements among analog devices for the purposes of this project are available commands (hotkey and/or image region), audio clip (optional, state or transition), static image display (optional, state or transition), animation (optional, state or transition). States and state transitions for each device model will have their own unique variations.
 
 Media organization and selection is outside the scope of this project, playback will be from current directory only.
-Console application.
 
 # Scope
 * No artwork browsing yet. 
@@ -18,3 +17,7 @@ Console application.
 * python 3.x in system path
     * pyaudio
 
+# Usage
+python aps.py -i <infile>
+
+Where infile is the media to be loaded. This is not where sound effects or machine animations go. 
