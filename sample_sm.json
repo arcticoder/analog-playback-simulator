@@ -1,22 +1,31 @@
 {
     "initial_state": "unloaded_stopped",
     "unloaded_stopped": {
-        "loaded_stopped": {
-            "audio": "sound effects\\load record short.wav"
+        "img": "img\\record_player.png",
+        "edges": {
+          "loaded_stopped": {
+              "audio": "sound effects\\load record short.wav"
+          }
         }
     },
     "loaded_stopped": {
+      "edges": {
         "loaded_started": {},
         "unloaded_stopped": {}
+      }
     },
     "loaded_started": {
+      "edges": {
         "loaded_paused": {
-            "audio": "sound effects\\pause record short.wav"
+          "audio": "sound effects\\pause record short.wav"
         },
         "loaded_stopped": {}
+      }
     },
     "loaded_paused": {
+      "edges": {
         "loaded_started": {},
         "loaded_stopped": {}
+      }
     }
 }

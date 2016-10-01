@@ -16,11 +16,14 @@ Media organization and selection is outside the scope of this project, playback 
 * mplayer in system path
 * python 3.x in system path
     * pyaudio
+    * Pillow >= 2.0.0
+    * Tkinter
 * A simulated machine (JSON) and corresponding media for it. A sample file is included with the project but no media files yet (copyright issues).  
 
 # Usage
 python aps.py -i <infile> -s <sim_machine_file.json>
-infile is audio media, sim_machine_file is a machine state graph encoded as an adjacency list (see sample_sm.json for example).
-Sound effects and animation paths go in here.
+infile is audio media, sim_machine_file is a machine state graph
 
-Where infile is the media to be loaded.  
+# Simulated Machine File
+This is a state graph encoded as an adjacency list in JSON format(see sample_sm.json for example).
+Sound effects and animation paths go in here. This must have initial_state, loaded_started, loaded_stopped, unloaded_stopped, and loaded_paused keys as they're the basic functionality common to all media players and they are used to send commands to mplayer.
