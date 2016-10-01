@@ -1,4 +1,4 @@
-import sys, getopt, wave, pyaudio
+import sys, getopt, wave, pyaudio, json
 from subprocess import call, Popen, DEVNULL, PIPE
 
 
@@ -10,41 +10,31 @@ def main(argv):
     :param argv:
     :return:
     """
-    state_graph = {
-        'unloaded_stopped': {
-            'loaded_stopped': {
-                # transition sound effect, this will end up in a json file soon
-                'audio': 'sound effects\load record short.wav'
-            }
-        },
-        'loaded_stopped': {
-            'loaded_started': {},
-            'unloaded_stopped': {}
-        },
-        'loaded_started': {
-            'loaded_paused': {
-                'audio': 'sound effects\pause record short.wav'
-            },
-            'loaded_stopped': {}
-        },
-        'loaded_paused': {
-            'loaded_started': {},
-            'loaded_stopped': {}
-        }
-    }
-    opts, args = getopt.getopt(argv, "hi:", ["infile="])
+    opts, args = getopt.getopt(argv, "hi:m:", ["infile=","machine="])
     proc = None
+    infile = None
+    smfile = None
+
     for opt, arg in opts:
         if opt == '-h':
-            print('aps.py -i <infile>')
+            print('Usage:\npython aps.py -i <infile> -s <sim_machine_file.json>\ninfile is audio media, sim_machine_file is json')
             sys.exit()
         elif opt in ("-i", "--infile"):
             infile = arg
+        elif opt in ("-s", "--machine"):
+            smfile = arg
+
+    if (not infile or not smfile):
+        print('Must specify infile and simulated machine file')
+        sys.exit()
+    with open(smfile) as json_file:
+        state_graph = json.load(json_file)
+
     py_audio = pyaudio.PyAudio()
     wavChunkSize = 1024
-
     state = 'unloaded_stopped'
     print('Current state: ' + state)
+
     while True:
         command = input('Enter new state (' + ','.join(state_graph[state]) + ') or exit):')
 
@@ -56,7 +46,7 @@ def main(argv):
                 audio_stream = py_audio.open(format = py_audio.get_format_from_width(loading_sound.getsampwidth()),
                                     channels = loading_sound.getnchannels(),
                                     rate = loading_sound.getframerate(),
-                                    output=True)
+                                    output = True)
                 audio_data = loading_sound.readframes(wavChunkSize)
 
                 while len(audio_data) != 0:
@@ -70,9 +60,11 @@ def main(argv):
         elif command == 'exit':
             if proc:
                 proc.kill()
+
             py_audio.terminate()
             sys.exit()
         print('Current state: ' + state)
+
         if state == 'loaded_started':
             cmd = ['mplayer', '-slave', '-quiet', infile]
             print('playing ' + infile)

@@ -18,6 +18,7 @@ Media organization and selection is outside the scope of this project, playback 
     * pyaudio
 
 # Usage
-python aps.py -i <infile>
+python aps.py -i <infile> -s <sim_machine_file.json>
+infile is audio media, sim_machine_file is json
 
 Where infile is the media to be loaded. This is not where sound effects or machine animations go. 

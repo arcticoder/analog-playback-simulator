@@ -1,0 +1,22 @@
+{
+    "initial_state": "unloaded_stopped",
+    "unloaded_stopped": {
+        "loaded_stopped": {
+            "audio": "sound effects\\load record short.wav"
+        }
+    },
+    "loaded_stopped": {
+        "loaded_started": {},
+        "unloaded_stopped": {}
+    },
+    "loaded_started": {
+        "loaded_paused": {
+            "audio": "sound effects\\pause record short.wav"
+        },
+        "loaded_stopped": {}
+    },
+    "loaded_paused": {
+        "loaded_started": {},
+        "loaded_stopped": {}
+    }
+}
