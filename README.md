@@ -22,6 +22,7 @@ Media organization and selection is outside the scope of this project, playback 
 
 # Usage
 python aps.py -i <infile> -s <sim_machine_file.json>
+
 infile is audio media, sim_machine_file is a machine state graph
 
 # Simulated Machine File
