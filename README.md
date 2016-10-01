@@ -16,4 +16,5 @@ Console application.
 # Requirements
 * mplayer in system path
 * python 3.x in system path
+    * pyaudio
 
