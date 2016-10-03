@@ -1,7 +1,7 @@
 {
     "initial_state": "unloaded_stopped",
     "unloaded_stopped": {
-        "img": "img\\record_player.png",
+        "img": "img\\record_player_unloaded.png",
         "edges": {
           "loaded_stopped": {
               "audio": "sound effects\\load record short.wav"
@@ -9,6 +9,7 @@
         }
     },
     "loaded_stopped": {
+      "img": "img\\record_player_loaded.png",
       "edges": {
         "loaded_started": {},
         "unloaded_stopped": {}

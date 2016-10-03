@@ -35,16 +35,16 @@ def main(argv):
 
     # create window
     root = tkinter.Tk()
-    canvas = tkinter.Canvas(root)
+    canvas = tkinter.Canvas(root, width=800, height=600)
     canvas.grid()
 
     state = state_graph['initial_state']
     print('Current state: ' + state)
+    image_on_canvas = None
 
     if ('img' in state_graph[state]):
         photo = tkinter.PhotoImage(file = state_graph[state]['img'])
-        canvas.create_image(0, 0, image = photo)
-        #root.mainloop()
+        image_on_canvas = canvas.create_image(400, 300, image = photo)
 
     while True:
         command = input('Enter new state (' + ','.join(state_graph[state]['edges']) + ') or exit):')
@@ -68,6 +68,13 @@ def main(argv):
                 audio_stream.close()
                 loading_sound.close()
             state = command
+            if ('img' in state_graph[state]):
+                print('changing to image ' + state_graph[state]['img'])
+                photo = tkinter.PhotoImage(file=state_graph[state]['img'])
+                if (image_on_canvas):
+                    canvas.itemconfig(image_on_canvas, image=photo)
+                else:
+                    canvas.create_image(400, 300, image = photo)
         elif command == 'exit':
             if mplayer_proc:
                 mplayer_proc.kill()
