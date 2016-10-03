@@ -37,7 +37,6 @@ def main(argv):
     root = tkinter.Tk()
     canvas = tkinter.Canvas(root, width=800, height=600)
     canvas.grid()
-
     state = state_graph['initial_state']
     print('Current state: ' + state)
     image_on_canvas = None
@@ -70,9 +69,9 @@ def main(argv):
             state = command
             if ('img' in state_graph[state]):
                 print('changing to image ' + state_graph[state]['img'])
-                photo = tkinter.PhotoImage(file=state_graph[state]['img'])
+                photo = tkinter.PhotoImage(file = state_graph[state]['img'])
                 if (image_on_canvas):
-                    canvas.itemconfig(image_on_canvas, image=photo)
+                    canvas.itemconfig(image_on_canvas, image = photo)
                 else:
                     canvas.create_image(400, 300, image = photo)
         elif command == 'exit':
