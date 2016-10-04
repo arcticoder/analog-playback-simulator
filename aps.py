@@ -3,10 +3,18 @@ from subprocess import call, Popen, DEVNULL, PIPE
 
 state = None
 
+
 def mouseClicked(event):
+    """
+    Main app logic (loop), traverses SM graph by image region
+
+    :param event:
+    :return:
+    """
+    # TODO: Don't use global variables, refactor into OOP
     global state, mplayer_proc, root, image_ref, infile
     wav_chunk_size = 1024
-    
+
     for edge_key in state_graph[state]['edges']:
         edge_state = state_graph[state]['edges'][edge_key]
         if (edge_state['region']['start_x'] <= event.x and
@@ -63,7 +71,6 @@ def main(argv):
     :param argv:
     :return:
     """
-    # TODO: Don't use global variables, refactor into OOP
     global state, state_graph, root, py_audio, image_index, canvas, mplayer_proc, image_ref, infile
     opts, args = getopt.getopt(argv, "hi:s:", ["infile=", "machine="])
     infile = None
