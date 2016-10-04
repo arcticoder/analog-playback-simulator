@@ -13,8 +13,10 @@ class APS:
     _state_graph = None
     _root = None
     _py_audio = None
-    _image_index = None
-    _image_ref = None
+    _sm_image_index = None
+    _sm_image_ref = None
+    _media_image_index = None
+    _media_image_ref = None
     _canvas = None
     _infile = None
 
@@ -45,14 +47,18 @@ class APS:
     def init_canvas(self):
         # create window
         self._root = tkinter.Tk()
-        self._canvas = tkinter.Canvas(self._root, width=800, height=600)
+        self._canvas = tkinter.Canvas(self._root, width=1400, height=600)
         self._canvas.bind("<Button-1>", self._mouse_clicked)
         self._canvas.pack()
         self._state = self._state_graph['initial_state']
 
         if ('img' in self._state_graph[self._state]):
-            self._image_ref = tkinter.PhotoImage(file=self._state_graph[self._state]['img'])
-            self._image_index = self._canvas.create_image(400, 300, image=self._image_ref)
+            self._sm_image_ref = tkinter.PhotoImage(file=self._state_graph[self._state]['img'])
+            self._sm_image_index = self._canvas.create_image(400, 300, image=self._sm_image_ref)
+
+    def init_media(self):
+        self._media_image_ref = tkinter.PhotoImage(file=self._state_graph['media']['img'])
+        self._media_image_index = self._canvas.create_image(1100, 300, image=self._media_image_ref)
 
     def main_loop(self):
         self._root.mainloop()
@@ -96,11 +102,11 @@ class APS:
         self._state = command
         if ('img' in self._state_graph[self._state]):
             print('changing to image ' + self._state_graph[self._state]['img'])
-            self._image_ref = tkinter.PhotoImage(file=self._state_graph[self._state]['img'])
-            if (self._image_index):
-                self._canvas.itemconfig(self._image_index, image=self._image_ref)
+            self._sm_image_ref = tkinter.PhotoImage(file=self._state_graph[self._state]['img'])
+            if (self._sm_image_index):
+                self._canvas.itemconfig(self._sm_image_index, image=self._sm_image_ref)
             else:
-                self._canvas.create_image(400, 300, image=self._image_ref)
+                self._canvas.create_image(400, 300, image=self._sm_image_ref)
 
         if self._state == 'loaded_started':
             if (previous_state == 'loaded_paused'):
@@ -132,6 +138,7 @@ def main(argv):
     aps = APS()
     aps.init_args(argv)
     aps.init_canvas()
+    aps.init_media()
     aps.main_loop()
 
 

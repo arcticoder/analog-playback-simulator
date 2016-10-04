@@ -11,7 +11,8 @@ Media organization and selection is outside the scope of this project, playback 
 * No video (ex. RCA selectavision, VHS, Betamax, etc) yet, but anything mplayer can play should be doable in the long term.
 * Limiting rule complexity (ex. random noise from fault introduction) and global states (ex. dirty head/needle) for initial milestones
 * This is not a DJ app nor is it intended to be, even though the first use case will be vinyl records. Standard usage only.
-* Image sizes must be 800x600
+* Machine image sizes must be 800x600, JPEG not supported
+* Media image sizes must be 600x600, JPEG not supported
 
 # Requirements
 * mplayer in system path

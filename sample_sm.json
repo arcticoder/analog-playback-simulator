@@ -1,5 +1,8 @@
 {
     "initial_state": "unloaded_stopped",
+    "media": {
+      "img": "record\\folder.png"
+    },
     "unloaded_stopped": {
         "img": "img\\record_player_unloaded.png",
         "edges": {
