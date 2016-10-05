@@ -72,7 +72,7 @@ class APS:
         :return:
         """
         wav_chunk_size = 1024
-
+        command = None
         for edge_key in self._state_graph[self._state]['edges']:
             edge_state = self._state_graph[self._state]['edges'][edge_key]
             if (edge_state['region']['start_x'] <= event.x and
@@ -81,45 +81,46 @@ class APS:
                         edge_state['region']['end_y'] > event.y):
                 command = edge_key
 
-        # check for transition audio, play if found
-        if ('audio' in self._state_graph[self._state]['edges'][command]):
-            audio_path = self._state_graph[self._state]['edges'][command]['audio']
-            loading_sound = wave.open(audio_path, "rb")
-            audio_stream = self._py_audio.open(format=self._py_audio.get_format_from_width(loading_sound.getsampwidth()),
-                                              channels=loading_sound.getnchannels(),
-                                              rate=loading_sound.getframerate(),
-                                              output=True)
-            audio_data = loading_sound.readframes(wav_chunk_size)
-
-            while len(audio_data) != 0:
-                audio_stream.write(audio_data)
+        if (command):
+            # check for transition audio, play if found
+            if ('audio' in self._state_graph[self._state]['edges'][command]):
+                audio_path = self._state_graph[self._state]['edges'][command]['audio']
+                loading_sound = wave.open(audio_path, "rb")
+                audio_stream = self._py_audio.open(format=self._py_audio.get_format_from_width(loading_sound.getsampwidth()),
+                                                  channels=loading_sound.getnchannels(),
+                                                  rate=loading_sound.getframerate(),
+                                                  output=True)
                 audio_data = loading_sound.readframes(wav_chunk_size)
 
-            audio_stream.stop_stream()
-            audio_stream.close()
-            loading_sound.close()
-        previous_state = self._state
-        self._state = command
-        if ('img' in self._state_graph[self._state]):
-            print('changing to image ' + self._state_graph[self._state]['img'])
-            self._sm_image_ref = tkinter.PhotoImage(file=self._state_graph[self._state]['img'])
-            if (self._sm_image_index):
-                self._canvas.itemconfig(self._sm_image_index, image=self._sm_image_ref)
-            else:
-                self._canvas.create_image(400, 300, image=self._sm_image_ref)
+                while len(audio_data) != 0:
+                    audio_stream.write(audio_data)
+                    audio_data = loading_sound.readframes(wav_chunk_size)
 
-        if self._state == 'loaded_started':
-            if (previous_state == 'loaded_paused'):
+                audio_stream.stop_stream()
+                audio_stream.close()
+                loading_sound.close()
+            previous_state = self._state
+            self._state = command
+            if ('img' in self._state_graph[self._state]):
+                print('changing to image ' + self._state_graph[self._state]['img'])
+                self._sm_image_ref = tkinter.PhotoImage(file=self._state_graph[self._state]['img'])
+                if (self._sm_image_index):
+                    self._canvas.itemconfig(self._sm_image_index, image=self._sm_image_ref)
+                else:
+                    self._canvas.create_image(400, 300, image=self._sm_image_ref)
+
+            if self._state == 'loaded_started':
+                if (previous_state == 'loaded_paused'):
+                    print('pause', flush=True, file=self._mplayer_proc.stdin)
+                else:
+                    cmd = ['mplayer', '-slave', '-quiet', self._infile]
+                    print('playing ' + self._infile)
+                    self._mplayer_proc = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL, stdin=PIPE, universal_newlines=True,
+                                              bufsize=1)
+            elif (self._state in ['loaded_stopped', 'unloaded_stopped'] and self._mplayer_proc):
+                self._mplayer_proc.kill()
+            elif (self._state == 'loaded_paused' and self._mplayer_proc):
                 print('pause', flush=True, file=self._mplayer_proc.stdin)
-            else:
-                cmd = ['mplayer', '-slave', '-quiet', self._infile]
-                print('playing ' + self._infile)
-                self._mplayer_proc = Popen(cmd, stdout=DEVNULL, stderr=DEVNULL, stdin=PIPE, universal_newlines=True,
-                                          bufsize=1)
-        elif (self._state in ['loaded_stopped', 'unloaded_stopped'] and self._mplayer_proc):
-            self._mplayer_proc.kill()
-        elif (self._state == 'loaded_paused' and self._mplayer_proc):
-            print('pause', flush=True, file=self._mplayer_proc.stdin)
 
     def __del__(self):
         if self._mplayer_proc:
