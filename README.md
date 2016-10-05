@@ -2,7 +2,7 @@
 
 Analog Playback Simulator (APS) simulates analog media (audio only for now) players such as record players, cassette players, 8-track players, reel-to-reel. Realistic model-specific behaviour is the goal of this project. CD players would work too, even though they're not analog.
 
-Common state elements among analog devices for the purposes of this project are available commands (hotkey and/or image region), audio clip (optional, state or transition), static image display (optional, state or transition), animation (optional, state or transition). States and state transitions for each device model will have their own unique variations.
+Common state elements among analog devices for the purposes of this project are available commands (ie image region), audio clip (optional, state or transition), static image display (optional, state or transition), animation (optional, state or transition). States and state transitions for each device model will have their own unique variations.
 
 Media organization and selection is outside the scope of this project, playback will be from current directory only.
 
